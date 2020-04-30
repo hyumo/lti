@@ -47,5 +47,13 @@ int main()
     num << 1, 2;
     den << 1, 2, 3;
     lti::tf sys3(num, den);
+
+    using namespace lti;
+    lti::tf sys4 = (s + 1) / (s * s + 2 * s + 1);
+
+    std::cout << sys1 << "\n";
+    std::cout << sys2 << "\n";
+    std::cout << sys3 << "\n";
+    std::cout << sys4 << "\n";
 }
 ```
