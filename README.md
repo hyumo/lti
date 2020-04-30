@@ -6,7 +6,7 @@
 ## Usage
 Just include the `lti.hpp` in your project.
 
-```
+```C++
 #include <lti.hpp>
 
 int main()
