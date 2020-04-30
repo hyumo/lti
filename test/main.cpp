@@ -190,6 +190,12 @@ TEST_CASE("Test tf")
         lti::tf sys_e(num_e, den_e);
         CHECK(sys + sys == sys_e);
     }
+
+    SECTION("Use s")
+    {
+        using namespace lti;
+        auto sys = s + 1;
+    }
 }
 
 TEST_CASE("Test polynomial")
@@ -407,9 +413,17 @@ TEST_CASE("Test polynomial")
         auto p_expect_3rd = polynomial(c_expect_3rd);
         CHECK(p.derivative().derivative().derivative() == p_expect_3rd);
     }
+
+    // SECTION("Test s")
+    // {
+    //     using namespace lti;
+    //     lti::tf sys4 = (s + 1) / (s * s + 2 * s + 1);
+    //     std::cout << sys4;
+    //     CHECK(false);
+    // }
 }
 
-TEST_CASE("MAIN")
+TEST_CASE("main")
 {
     int nx = 2, nu = 2, ny = 2;
     Eigen::MatrixXd A(nx, nx);
@@ -426,7 +440,7 @@ TEST_CASE("MAIN")
     // der(x) = Ax + Bu;
     //      y = Cx + Du;
     //----------------------------------------
-    lti::css sys_c(A, B, C, D);
+    lti::css sys1(A, B, C, D);
 
     //----------------------------------------
     // Discrete LTI state space representation
@@ -434,7 +448,7 @@ TEST_CASE("MAIN")
     //   y(k) = Cx(k) + D(k);
     //----------------------------------------
     double dt = 0.001;
-    lti::dss sys_d(A, B, C, D, dt);
+    lti::dss sys2(A, B, C, D, dt);
 
     //---------------------------------
     // Create a transfer function
@@ -447,4 +461,12 @@ TEST_CASE("MAIN")
     num << 1, 2;
     den << 1, 2, 3;
     lti::tf sys3(num, den);
+
+    using namespace lti;
+    lti::tf sys4 = (s + 1) / (s * s + 2 * s + 1);
+
+    std::cout << sys1 << "\n";
+    std::cout << sys2 << "\n";
+    std::cout << sys3 << "\n";
+    std::cout << sys4 << "\n";
 }

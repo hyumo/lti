@@ -515,6 +515,11 @@ public:
         return polynomial(k * other._c);
     }
 
+    polynomial operator^(int k) const 
+    {
+        throw std::runtime_error("Not implemented yet");
+    }
+
     /**
      * \brief Return the degree of a polynomial
      */
@@ -560,6 +565,12 @@ private:
 
 public:
     tf() = delete;
+
+    tf(double k)
+        : tf((Eigen::Array<double, 1, 1>() << 1).finished(),
+             (Eigen::Array<double, 1, 1>() << 1).finished())
+    {
+    }
 
     tf(Eigen::ArrayXd n, Eigen::ArrayXd d) : _n(n), _d(d)
     {
@@ -640,6 +651,13 @@ public:
         return tf(num.c(), den.c());
     }
 
+    tf operator+(double k) const
+    {
+        auto num = details::polynomial(_n) + details::polynomial(k * _d);
+        auto den = details::polynomial(_d);
+        return tf(num.c(), den.c());
+    }
+
     /**
      * \brief Connect two systems in series
      */
@@ -647,6 +665,13 @@ public:
     {
         auto num = details::polynomial(_n) * details::polynomial(rhs._n);
         auto den = details::polynomial(_d) * details::polynomial(rhs._d);
+        return tf(num.c(), den.c());
+    }
+
+    tf operator/(const tf &rhs) const
+    {
+        auto num = details::polynomial(_n) * details::polynomial(rhs._d);
+        auto den = details::polynomial(_d) * details::polynomial(rhs._n);
         return tf(num.c(), den.c());
     }
 
@@ -659,7 +684,7 @@ public:
         auto den = details::polynomial(_d);
         return tf(num.c(), den.c());
     }
-    
+
     /**
      * \brief Gain
      */
@@ -682,6 +707,9 @@ using css = details::stateSpace<false>;
 /// \brief Discrete state space representation
 ///////////////////////////////////////////////////////////////////////////////
 using dss = details::stateSpace<true>;
+
+const tf &s = tf((Eigen::Array2d() << 1, 0).finished(),
+                 (Eigen::Array<double, 1, 1>() << 1).finished());
 
 template <typename T>
 struct is_css {

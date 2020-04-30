@@ -1,7 +1,7 @@
 
 # LTI
 
-[WIP] An header only C++17 library for linear time invariant system based on Eigen3
+[WIP] A header only C++17 library for linear time invariant system based on Eigen3
 
 ## Usage
 Just include the `lti.hpp` in your project.
