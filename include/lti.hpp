@@ -515,7 +515,18 @@ public:
         return polynomial(k * other._c);
     }
 
-    polynomial operator^(int k) const 
+    /**
+     * \brief Production
+     */
+    polynomial operator/(double k) const
+    {
+        if (fabs(k) < 100 * std::numeric_limits<double>::epsilon()) {
+            throw std::invalid_argument("cannot devide by zero");
+        }
+        return polynomial(_c / k);
+    }
+
+    polynomial operator^(int k) const
     {
         throw std::runtime_error("Not implemented yet");
     }
@@ -549,6 +560,28 @@ public:
     const auto &c() const
     {
         return _c;
+    }
+
+    /**
+     * \brief Returns the roots of the polynomial
+     */
+    const auto roots() const
+    {
+        // Make sure the degree is at least 1
+        if (degree() < 1) {
+            throw std::runtime_error(
+                "Degree of the polynomial must be at least 1");
+        }
+        auto n = degree();
+        // Build companion matrix
+        Eigen::MatrixXd A(n, n);
+        A.setZero();
+        // Last col is _c.tail(n)/_c(0) (monic polynomial)
+        A.row(0) = -_c.tail(n) / _c(0);
+        // Bottom left corner is a identity matrix
+        A.bottomLeftCorner(n - 1, n - 1)
+             = Eigen::MatrixXd::Identity(n - 1, n - 1);
+        return A.eigenvalues();
     }
 };
 } // namespace details

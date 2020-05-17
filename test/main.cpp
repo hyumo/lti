@@ -421,6 +421,33 @@ TEST_CASE("Test polynomial")
     //     std::cout << sys4;
     //     CHECK(false);
     // }
+
+    SECTION("Test roots")
+    {
+        using namespace std::complex_literals;
+
+        // Roots of 2x^2-2
+        Eigen::ArrayXd c1(3);
+        c1 << 2, 0, -2;
+        auto p1 = polynomial(c1);
+        Eigen::VectorXcd e1(2);
+        e1 << 1.0 + 0.0i, -1.0 + 0.0i;
+        CHECK(e1.isApprox(p1.roots()));
+
+        // Roots of 1 should throw
+        Eigen::ArrayXd c2(1);
+        c2 << 1;
+        auto p2 = polynomial(c2);
+        CHECK_THROWS(p2.roots());
+
+        // Roots of x^2+1
+        Eigen::ArrayXd c3(3);
+        c3 << 1, 0, 1;
+        auto p3 = polynomial(c3);
+        Eigen::VectorXcd e3(2);
+        e3 << 0.0 + 1.0i, 0.0 - 1.0i;
+        CHECK(e3.isApprox(p3.roots()));
+    }
 }
 
 TEST_CASE("main")
